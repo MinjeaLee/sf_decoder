@@ -8,9 +8,14 @@ from service import encode_base64
 app = Flask(__name__)
 
 
-with open('flag.txt', 'r') as f:
-	flag = f.read()
-app.secret_key = str(flag)
+# flag.txt 가 없으면 경고를 출력하고 종료합니다.
+if not os.path.exists('flag.txt'):
+	print('flag.txt not found!')
+	exit(0)
+else:
+	with open('flag.txt', 'r') as f:
+		flag = f.read()
+	app.secret_key = str(flag)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(base_dir, 'db.sqlite')
