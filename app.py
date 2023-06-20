@@ -49,7 +49,7 @@ def service_post():
 def about(content=None, result=None):
 	if session.get('username') is None:
 		return render_template('login.html')
-	with open("./templates/2.html") as f:
+	with open("./templates/encoder.html") as f:
 		thisistemp = f.read()
 
 	# filter_by user_id
@@ -70,11 +70,11 @@ def about(content=None, result=None):
 		# content를 Jinja2 템플릿으로 렌더링합니다.
 		content = render_template_string(content)
 		# -- patch --
-		# content = render_template('2.html', content=content)
+		# content = render_template('encoder.html', content=content)
 		# -- patch --
-	return render_template('2.html', name=name, datas=datas, content=content, result=result)
+	return render_template('encoder.html', name=name, datas=datas, content=content, result=result)
 	# --- patch ---
-	# return render_template('2.html', name=name, datas=datas, content=content, result=result)
+	# return render_template('encoder.html', name=name, datas=datas, content=content, result=result)
 	# --- patch ---
 
 # login
