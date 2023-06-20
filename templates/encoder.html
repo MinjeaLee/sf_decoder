@@ -28,10 +28,17 @@
 }
 </style>
 <body>
+{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		<script>
+			alert("{{messages[-1]}}");
+		</script>
+	{% endif %}
+{% endwith %}
 <div class="page-content page-container" id="page-content">
-	<div class="padding">
-		<div class="row container d-flex justify-content-center">
-			<div class="col-md-6">
+	<div class="padding justify-content-center d-flex">
+		<div class="row container justify-content-center">
+			<div class="col-md-6 ">
 				<div class="card card-bordered">
 					<div class="card-header">
 						<h4 class="card-title"><strong>Base64 Encoding 🙌🏻 {{ name }}</strong></h4>

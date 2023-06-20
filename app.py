@@ -1,5 +1,5 @@
 from flask import Flask, render_template, render_template_string
-from flask import request, session, flash
+from flask import request, session, flash, redirect, url_for
 import os
 from model import db, User, Post
 from service import encode_base64
@@ -33,8 +33,6 @@ def index():
 	else:
 		return about()
 
-
-
 @app.route('/service_post', methods=['POST', 'GET'])
 def service_post():
 	if session.get('username') is None:
@@ -44,7 +42,6 @@ def service_post():
 		result = encode_base64(user_input)
 		return about(content=user_input, result=result)
 	
-
 @app.route("/about")
 def about(content=None, result=None):
 	if session.get('username') is None:
@@ -81,17 +78,22 @@ def about(content=None, result=None):
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
-		print(request.form)
 		username = request.form['username']
 		password = request.form['password']
 		user = User.query.filter_by(username=username, password=password).first()
-		if user is not None:
+		if user is not None and user.username != 'emperor':
 			session['username'] = username
 			return about()
+		elif user is None and username == 'emperor' and password == app.secret_key:
+			session['username'] = username
+			flash("hi emperor, do you want to go to emperor page?")
 		else:
-			flash('Login failed')
+			flash('Login failed, check your username or password')
 			return render_template('login.html', message='Login failed')
 	return render_template('login.html')
+
+#! todo: 황제는 register를 할 수 없도록 막아야 합니다.
+
 
 # register
 @app.route('/register', methods=['POST', 'GET'])
@@ -101,11 +103,17 @@ def register():
 		username = request.form['username']
 		password = request.form['password']
 		user = User.query.filter_by(username=username).first()
-		if user is None:
+		if user is None and username != 'emperor' and username != '' and password != '':
 			user = User(username=username, password=password)
 			db.session.add(user)
 			db.session.commit()
 			return render_template('login.html', message='Register successfully')
+		elif username == 'emperor':
+			flash("황제를 등록하는 것은 경솔한 행동이다")
+			return render_template('login.html', message='황제를 등록하는 것은 경솔한 행동이다')
+		elif username == '' or password == '':
+			flash('Username or password is empty')
+			return render_template('login.html', message='Username or password is empty')
 		else:
 			flash('User already exists')
 			return render_template('login.html', message='User already exists')
@@ -115,6 +123,43 @@ def register():
 def logout():
 	session.pop('username', None)
 	return render_template('login.html')
+
+@app.route('/emperor')
+def emperor():
+	# username != emperor
+	if session.get('username') is None:
+		flash("login first")
+		return render_template('login.html')
+	# emperor
+	if session.get('username') != 'emperor' and session.get('username'): 
+		flash('your not emperor')
+		# redirect to /about
+		return about()
+	# all user
+	# number of contents per user
+	users = User.query.all()
+	count_contents = []
+	for user in users:
+		count_contents.append(len(Post.query.filter_by(user_id=user.id).all()))
+	datas = zip(users, count_contents)
+	return render_template('emperor.html', datas=datas)
+
+@app.route('/delete_content/<int:user_id>')
+def del_content(user_id):
+	# delete content
+	post = Post.query.filter_by(user_id=user_id).all()
+	for p in post:
+		db.session.delete(p)
+	db.session.commit()
+	return redirect(url_for('emperor'))
+
+@app.route('/delete_user/<int:user_id>')
+def del_user(user_id):
+	# delete user
+	user = User.query.filter_by(id=user_id).first()
+	db.session.delete(user)
+	db.session.commit()
+	return redirect(url_for('emperor'))
 
 
 db.init_app(app)
