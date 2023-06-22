@@ -53,6 +53,7 @@
 							</div>
 						</div>
 						{% endif%}
+						{% if datas %}
 						{% for data in datas %}
 							<div class="media media-chat media-chat-reverse">
 								<div class="media-body">
@@ -68,6 +69,7 @@
 								</div>
 							</div>
 						{% endfor %}
+						{% endif %}
 						{% if content %}
 							<div class="media media-chat media-chat-reverse">
 								<div class="media-body">

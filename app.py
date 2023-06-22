@@ -2,7 +2,8 @@ from flask import Flask, render_template, render_template_string
 from flask import request, session, flash, redirect, url_for
 import os
 from model import db, User, Post
-from service import encode_base64
+from service import encode_base64, str_to_qrcode
+# import qrcode
 
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ else:
 	with open('flag.txt', 'r') as f:
 		flag = f.read()
 	app.secret_key = str(flag)
+	str_to_qrcode(app.secret_key)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(base_dir, 'db.sqlite')
@@ -24,7 +26,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
-# secret_key
+
+
+# secret_key to qr
+
 
 @app.route('/')
 def index():
@@ -160,6 +165,10 @@ def del_user(user_id):
 	db.session.delete(user)
 	db.session.commit()
 	return redirect(url_for('emperor'))
+
+@app.route('/maybe_flag')
+def maybe_flag():
+	return render_template("qr.html")
 
 
 db.init_app(app)
