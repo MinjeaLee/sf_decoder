@@ -156,5 +156,5 @@ with app.app_context():
 	db.create_all()
 
 
-app.run(port=9000, debug=True)
+app.run(port=4242, debug=True)
 

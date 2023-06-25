@@ -4,6 +4,6 @@ WORKDIR /sf_encoder
 COPY . .
 RUN pip install -r requirements.txt
 
-EXPOSE 9000
+EXPOSE 4242
 
 CMD python ./app.py
