@@ -1,9 +1,41 @@
-version: "3.7"
+version: '3'
 services:
-  flask:
-    build: 
+  chall1_A:
+    build:
       context: .
       dockerfile: Dockerfile
+    image: chall5
     ports:
-      - 9000:9000
-    container_name: flask
+      - "50001:4242"
+      - "5001:22"
+    restart: always
+
+  chall1_B:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chall5
+    ports:
+      - "50002:4242"
+      - "5002:22"
+    restart: always
+
+  chall1_C:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chall5
+    ports:
+      - "50003:4242"
+      - "5003:22"
+    restart: always
+
+  chall1_D:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chall5
+    ports:
+      - "50004:4242"
+      - "5004:22"
+    restart: always
