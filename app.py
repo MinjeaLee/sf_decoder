@@ -3,13 +3,10 @@ from flask import request, session, flash, redirect, url_for
 import os
 from model import db, User, Post
 from service import encode_base64, str_to_qrcode
-# import qrcode
-
 
 app = Flask(__name__)
 
 
-# flag.txt 가 없으면 경고를 출력하고 종료합니다.
 if not os.path.exists('flag.txt'):
 	print('flag.txt not found!')
 	exit(0)
@@ -26,9 +23,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
-
-
-# secret_key to qr
 
 
 @app.route('/')
@@ -54,7 +48,6 @@ def about(content=None, result=None):
 	with open("./templates/encoder.html") as f:
 		thisistemp = f.read()
 
-	# filter_by user_id
 	try:
 		user_id = User.query.filter_by(username=session.get('username')).first().id
 		name = session.get('username')
@@ -69,7 +62,6 @@ def about(content=None, result=None):
 		db.session.add(post)
 		db.session.commit()
 	
-		# content를 Jinja2 템플릿으로 렌더링합니다.
 		content = render_template_string(content)
 		# -- patch --
 		# content = render_template('encoder.html', content=content)
@@ -79,7 +71,6 @@ def about(content=None, result=None):
 	# return render_template('encoder.html', name=name, datas=datas, content=content, result=result)
 	# --- patch ---
 
-# login
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
@@ -97,13 +88,8 @@ def login():
 			return render_template('login.html', message='Login failed')
 	return render_template('login.html')
 
-#! todo: 황제는 register를 할 수 없도록 막아야 합니다.
-
-
-# register
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-	# db model User
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
@@ -131,17 +117,12 @@ def logout():
 
 @app.route('/emperor')
 def emperor():
-	# username != emperor
 	if session.get('username') is None:
 		flash("login first")
 		return render_template('login.html')
-	# emperor
 	if session.get('username') != 'emperor' and session.get('username'): 
 		flash('your not emperor')
-		# redirect to /about
 		return about()
-	# all user
-	# number of contents per user
 	users = User.query.all()
 	count_contents = []
 	for user in users:
@@ -151,7 +132,6 @@ def emperor():
 
 @app.route('/delete_content/<int:user_id>')
 def del_content(user_id):
-	# delete content
 	post = Post.query.filter_by(user_id=user_id).all()
 	for p in post:
 		db.session.delete(p)
@@ -160,7 +140,6 @@ def del_content(user_id):
 
 @app.route('/delete_user/<int:user_id>')
 def del_user(user_id):
-	# delete user
 	user = User.query.filter_by(id=user_id).first()
 	db.session.delete(user)
 	db.session.commit()
