@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>SF Encoder - Emperor 👑</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="./static/styles.css" rel="stylesheet" />
+        <link href="./static/emperor.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script>
             function btn_del_content(id) {
@@ -46,7 +46,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" onclick="redirectToProtected()">Activity Log</a></li>
+                        <li>
+                            <button class="dropdown-item" id="popupButton">버튼</button>
+                            <div id="imageModal" class="modal">
+                                <span class="close">&times;</span>
+                                <img class="modal-content" id="imageInModal" src="../static/qr.png">
+                            </div>
                         <li>
                             <hr class="dropdown-divider" />
                         </li>
@@ -98,8 +103,8 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="./static/scripts.js"></script>
+        <script src="./static/emperor.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="./static/datatables-simple-demo.js"></script>
+        <script src="./static/emperor_data_table.js"></script>
     </body>
 </html>
