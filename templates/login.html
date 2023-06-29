@@ -15,10 +15,10 @@
 {% if messages == ['hi emperor, do you want to go to emperor page?'] %}
 	<script>
 		if(confirm("{{messages[-1]}}") == true){
-			location.href = "http://localhost:9000/emperor";
+			location.href = "http://localhost:4242/emperor";
 		}
 		else{
-			location.href = "http://localhost:9000/about";
+			location.href = "http://localhost:4242/about";
 		}
 	</script>
 {% elif messages %}
@@ -33,7 +33,7 @@
 		<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
 		<div class="login-form">
 			<div class="sign-in-htm">
-				<form action="http://localhost:9000/login" method="POST">
+				<form action="http://localhost:4242/login" method="POST">
 
 					<div class="group">
 						<label for="username" class="label">Username</label>
@@ -50,7 +50,7 @@
 				<div class="hr"></div>
 			</div>
 			<div class="sign-up-htm">
-				<form action="http://localhost:9000/register" method="POST">
+				<form action="http://localhost:4242/register" method="POST">
 					<div class="group">
 						<label for="user" class="label">Username</label>
 						<input id="user" type="text" class="input" name="username">
