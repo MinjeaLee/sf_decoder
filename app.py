@@ -145,11 +145,6 @@ def del_user(user_id):
 	db.session.commit()
 	return redirect(url_for('emperor'))
 
-@app.route('/maybe_flag')
-def maybe_flag():
-	return render_template("qr.html")
-
-
 db.init_app(app)
 db.app = app
 with app.app_context():
