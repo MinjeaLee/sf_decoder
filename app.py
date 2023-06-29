@@ -140,6 +140,11 @@ def del_content(user_id):
 
 @app.route('/delete_user/<int:user_id>')
 def del_user(user_id):
+	# 유저가 작성한 글 삭제
+	post = Post.query.filter_by(user_id=user_id).all()
+	for p in post:
+		db.session.delete(p)
+	# 유저 삭제
 	user = User.query.filter_by(id=user_id).first()
 	db.session.delete(user)
 	db.session.commit()
