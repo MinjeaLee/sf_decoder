@@ -22,7 +22,7 @@ db_file = os.path.join(base_dir, 'db.sqlite')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-
+app.config['SESSION_COOKIE_NAME'] = 'SF_SESSION'
 
 
 @app.route('/')
