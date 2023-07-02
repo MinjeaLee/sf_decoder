@@ -79,7 +79,6 @@ if mis_emperor_login != "alert(\"Login failed, check your username or password\"
 # login
 session = requests.Session()
 login = session.post(check_url + "/login", data=user)
-# print(login.text)
 
 for i in range(3):
 	#random string 생성
@@ -97,7 +96,6 @@ for i in range(3):
 	soup = BeautifulSoup(data, 'html.parser')
 	# media-body인 모든 요소를 가져옴
 	text = soup.find_all('div', {'class': 'media-body'})
-	# print(plain)
 	if i == 0:
 		plain_text = text[1].text.strip()
 		encode_text = text[2].text.strip()
@@ -132,11 +130,8 @@ if cookies == {}:
 	print("login failed")
 	exit()
 
-# emperor 페이지 확인
 connect_emperor = session.get(check_url + "/emperor")
-# print(connect_emperor.text)
 soup = BeautifulSoup(connect_emperor.text, 'html.parser')
-# td
 emperor_check = soup.find_all('td')
 exist_flag = 0
 for i in range(len(emperor_check)):
