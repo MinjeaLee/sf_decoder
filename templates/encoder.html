@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,49 +13,51 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
 </head>
 <style>
-
 	.media-body p {
-    word-wrap: break-word;  /* add this line */
-}
-	
+		word-wrap: break-word;
+		/* add this line */
+	}
+
 	.btn-secondary {
-	color: #4d5259 !important;
-	background-color: #e4e7ea;
-	border-color: #e4e7ea;
-	color: #fff;
-}
+		color: #4d5259 !important;
+		background-color: #e4e7ea;
+		border-color: #e4e7ea;
+		color: #fff;
+	}
+
 	.btn-xs:hover {
-	color: #fff !important;
-}
+		color: #fff !important;
+	}
 </style>
+
 <body>
-{% with messages = get_flashed_messages() %}
+	{% with messages = get_flashed_messages() %}
 	{% if messages %}
-		<script>
-			alert("{{messages[-1]}}");
-		</script>
+	<script>
+		alert("{{messages[-1]}}");
+	</script>
 	{% endif %}
-{% endwith %}
-<div class="page-content page-container" id="page-content">
-	<div class="padding justify-content-center d-flex">
-		<div class="row container justify-content-center">
-			<div class="col-md-6 ">
-				<div class="card card-bordered">
-					<div class="card-header">
-						<h4 class="card-title"><strong>Base64 Encoding 🙌🏻 {{ name }}</strong></h4>
-						<a class="btn btn-xs btn-secondary" href="http://localhost:4242/logout" data-abc="true">Logout</a>
-					</div>
-					<div class="ps-container ps-theme-default ps-active-y chat-container" id="chat-content"
-						style="overflow-y: auto !important; height:500px !important;">
-						{% if datas == [] %}
-						<div class="media media-chat media-chat-reverse">
-							<div class="media-body">
-								<p>please write something down!! 🔥</p>
-							</div>
+	{% endwith %}
+	<div class="page-content page-container" id="page-content">
+		<div class="padding justify-content-center d-flex">
+			<div class="row container justify-content-center">
+				<div class="col-md-6 ">
+					<div class="card card-bordered">
+						<div class="card-header">
+							<h4 class="card-title"><strong>Base64 Encoding 🙌🏻 {{ name }}</strong></h4>
+							<a class="btn btn-xs btn-secondary" href="{{ host_url }}logout" data-abc="true">Logout</a>
 						</div>
-						{% endif%}
-						{% if datas %}
-						{% for data in datas %}
+						<div class="ps-container ps-theme-default ps-active-y chat-container" id="chat-content"
+							style="overflow-y: auto !important; height:500px !important;">
+							{% if datas == [] %}
+							<div class="media media-chat media-chat-reverse">
+								<div class="media-body">
+									<p>please write something down!! 🔥</p>
+								</div>
+							</div>
+							{% endif%}
+							{% if datas %}
+							{% for data in datas %}
 							<div class="media media-chat media-chat-reverse">
 								<div class="media-body">
 									<p>{{ data.content }}</p>
@@ -68,23 +71,24 @@
 									<p>{{ data.result }}</p>
 								</div>
 							</div>
-						{% endfor %}
-						{% endif %}
-						{% if content %}
+							{% endfor %}
+							{% endif %}
+							{% if content %}
 							<div class="media media-chat media-chat-reverse">
 								<div class="media-body">
 									<p>{{ content }}</p>
 								</div>
 							</div>
-							
+
 							<div class="media media-chat">
-								<img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
+								<img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png"
+									alt="...">
 								<div class="media-body">
 									<p>{{ result }}</p>
 								</div>
 							</div>
-						{% endif %}
-					</div>
+							{% endif %}
+						</div>
 						<div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
 							<div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
 						</div>
@@ -96,7 +100,7 @@
 					<div class="publisher bt-1 border-light">
 						<img class="avatar avatar-xs"
 							src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-						<form class="d-flex justify-content-between" action="http://localhost:4242/service_post" method="post">
+						<form class="d-flex justify-content-between" action="{{ host_url }}service_post" method="post">
 
 							<input class="publisher-input" type="text" placeholder="Write something" name="content">
 							<button class="publisher-btn text-info m1-auto" type="submit">
@@ -109,8 +113,9 @@
 			</div>
 		</div>
 	</div>
-</div>
+	</div>
 </body>
+
 </html>
 
 <script>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,68 +10,71 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
+
 <body>
-<!-- Message Flashing -->
-{% with messages = get_flashed_messages() %}
-{% if messages == ['hi emperor, do you want to go to emperor page?'] %}
+	<!-- Message Flashing -->
+	{% with messages = get_flashed_messages() %}
+	{% if messages == ['hi emperor, do you want to go to emperor page?'] %}
 	<script>
-		if(confirm("{{messages[-1]}}") == true){
-			location.href = "http://localhost:4242/emperor";
+		if (confirm("{{messages[-1]}}") == true) {
+			location.href = "{{ host_url }}emperor";
 		}
-		else{
-			location.href = "http://localhost:4242/about";
+		else {
+			location.href = "{{ host_url }}about";
 		}
 	</script>
-{% elif messages %}
+	{% elif messages %}
 	<script>
 		alert("{{messages[-1]}}");
 	</script>
-{% endif %}
-{% endwith %}
-<div class="login-wrap">
-	<div class="login-html">
-		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-		<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
-		<div class="login-form">
-			<div class="sign-in-htm">
-				<form action="http://localhost:4242/login" method="POST">
+	{% endif %}
+	{% endwith %}
+	<div class="login-wrap">
+		<div class="login-html">
+			<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign
+				In</label>
+			<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+			<div class="login-form">
+				<div class="sign-in-htm">
+					<form action="{{ host_url }}login" method="POST">
 
-					<div class="group">
-						<label for="username" class="label">Username</label>
-						<input id="username" type="text" class="input" name="username">
+						<div class="group">
+							<label for="username" class="label">Username</label>
+							<input id="username" type="text" class="input" name="username">
+						</div>
+						<div class="group">
+							<label for="pass" class="label">Password</label>
+							<input id="pass" type="password" class="input" data-type="password" name="password">
+						</div>
+						<div class="group">
+							<input type="submit" class="button" value="Sign In">
+						</div>
+					</form>
+					<div class="hr"></div>
+				</div>
+				<div class="sign-up-htm">
+					<form action="{{ host_url }}register" method="POST">
+						<div class="group">
+							<label for="user" class="label">Username</label>
+							<input id="user" type="text" class="input" name="username">
+						</div>
+						<div class="group">
+							<label for="pass" class="label">Password</label>
+							<input id="pass" type="password" class="input" data-type="password" name="password">
+						</div>
+						<div class="group">
+							<input type="submit" class="button" value="Sign Up">
+						</div>
+					</form>
+					<div class="hr"></div>
+					<div class="foot-lnk">
+						<label for="tab-1">Already Member?</a>
 					</div>
-					<div class="group">
-						<label for="pass" class="label">Password</label>
-						<input id="pass" type="password" class="input" data-type="password" name="password">
-					</div>
-					<div class="group">
-						<input type="submit" class="button" value="Sign In">
-					</div>
-				</form>
-				<div class="hr"></div>
-			</div>
-			<div class="sign-up-htm">
-				<form action="http://localhost:4242/register" method="POST">
-					<div class="group">
-						<label for="user" class="label">Username</label>
-						<input id="user" type="text" class="input" name="username">
-					</div>
-					<div class="group">
-						<label for="pass" class="label">Password</label>
-						<input id="pass" type="password" class="input" data-type="password" name="password">
-					</div>
-					<div class="group">
-						<input type="submit" class="button" value="Sign Up">
-					</div>
-				</form>
-				<div class="hr"></div>
-				<div class="foot-lnk">
-					<label for="tab-1">Already Member?</a>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-	
+
 </body>
+
 </html>

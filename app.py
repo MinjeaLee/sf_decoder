@@ -28,14 +28,14 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 @app.route('/')
 def index():
 	if session.get('username') is None:
-		return render_template('login.html')
+		return render_template('login.html', host_url=request.host_url)
 	else:
 		return about()
 
 @app.route('/service_post', methods=['POST', 'GET'])
 def service_post():
 	if session.get('username') is None:
-		return render_template('login.html')
+		return render_template('login.html', host_url=request.host_url)
 	if request.method == 'POST':
 		user_input = request.form['content']
 		result = encode_base64(user_input)
@@ -44,7 +44,7 @@ def service_post():
 @app.route("/about")
 def about(content=None, result=None):
 	if session.get('username') is None:
-		return render_template('login.html')
+		return render_template('login.html', host_url=request.host_url)
 	with open("./templates/encoder.html") as f:
 		thisistemp = f.read()
 
@@ -66,7 +66,7 @@ def about(content=None, result=None):
 		# -- patch --
 		# content = render_template('encoder.html', content=content)
 		# -- patch --
-	return render_template('encoder.html', name=name, datas=datas, content=content, result=result)
+	return render_template('encoder.html', name=name, datas=datas, content=content, result=result, host_url=request.host_url)
 	# --- patch ---
 	# return render_template('encoder.html', name=name, datas=datas, content=content, result=result)
 	# --- patch ---
@@ -85,8 +85,8 @@ def login():
 			flash("hi emperor, do you want to go to emperor page?")
 		else:
 			flash('Login failed, check your username or password')
-			return render_template('login.html', message='Login failed')
-	return render_template('login.html')
+			return render_template('login.html', message='Login failed', host_url=request.host_url)
+	return render_template('login.html', host_url=request.host_url)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -98,28 +98,28 @@ def register():
 			user = User(username=username, password=password)
 			db.session.add(user)
 			db.session.commit()
-			return render_template('login.html', message='Register successfully')
+			return render_template('login.html', message='Register successfully', host_url=request.host_url)
 		elif username == 'emperor':
 			flash("황제를 등록하는 것은 경솔한 행동이다")
-			return render_template('login.html', message='황제를 등록하는 것은 경솔한 행동이다')
+			return render_template('login.html', message='황제를 등록하는 것은 경솔한 행동이다', host_url=request.host_url)
 		elif username == '' or password == '':
 			flash('Username or password is empty')
-			return render_template('login.html', message='Username or password is empty')
+			return render_template('login.html', message='Username or password is empty', host_url=request.host_url)
 		else:
 			flash('User already exists')
-			return render_template('login.html', message='User already exists')
-	return render_template('login.html')
+			return render_template('login.html', message='User already exists', host_url=request.host_url)
+	return render_template('login.html', host_url=request.host_url)
 
 @app.route('/logout')
 def logout():
 	session.pop('username', None)
-	return render_template('login.html')
+	return render_template('login.html', host_url=request.host_url)
 
 @app.route('/emperor')
 def emperor():
 	if session.get('username') is None:
 		flash("login first")
-		return render_template('login.html')
+		return render_template('login.html', host_url=request.host_url)
 	if session.get('username') != 'emperor' and session.get('username'): 
 		flash('your not emperor')
 		return about()
@@ -128,7 +128,7 @@ def emperor():
 	for user in users:
 		count_contents.append(len(Post.query.filter_by(user_id=user.id).all()))
 	datas = zip(users, count_contents)
-	return render_template('emperor.html', datas=datas)
+	return render_template('emperor.html', datas=datas, host_url=request.host_url)
 
 @app.route('/delete_content/<int:user_id>')
 def del_content(user_id):
