@@ -7,11 +7,11 @@ import time
 #todo
 #! TODO : 1. 로그인 회원가입 절차 확인
 #! TODO : 1-2. Emperor 회원 가입 불가 확인
-#TODO : 2. 인코딩 서비스 무결성, 가용성 확인
-#TODO : 3. 로그아웃 절차 확인
-#TODO : 4. Emperor 계정 확인
-#TODO : 5. Emperor page 접속 확인
-#TODO : 5-2. Emperor page에서 추가한 유저 정보 일치 여부 확인
+#! TODO : 2. 인코딩 서비스 무결성, 가용성 확인
+#! TODO : 3. 로그아웃 절차 확인
+#! TODO : 4. Emperor 계정 확인
+#! TODO : 5. Emperor page 접속 확인
+#! TODO : 5-2. Emperor page에서 추가한 유저 정보 일치 여부 확인
 #TODO : 5-3. 추가한 유저, 작성 글 삭제 여부 확인
 #TODO : 5-4. flag qr 코드 확인
 
@@ -138,15 +138,40 @@ connect_emperor = session.get(check_url + "/emperor")
 soup = BeautifulSoup(connect_emperor.text, 'html.parser')
 # td
 emperor_check = soup.find_all('td')
-id = emperor_check[0].text.strip()
-pw = emperor_check[1].text.strip()
-if id != user['username']:
-	print("emperor page incorrect runnig")
-	exit()
-if pw != user['password']:
-	print("emperor page incorrect runnig")
+exist_flag = 0
+for i in range(len(emperor_check)):
+	if emperor_check[i].text.strip() == user['username']:
+		user_id = int(emperor_check[i - 1].text.strip())
+		exist_flag += 1
+	if emperor_check[i].text.strip() == user['password']:
+		exist_flag += 1
+if exist_flag != 2:
+	print("emperor page incorrect run")
 	exit()
 
+#TODO : 5-3. 추가한 유저, 작성 글 삭제 여부 확인
+user_delete = session.get(
+	check_url + "/delete_content/" + str(user_id))
+soup = BeautifulSoup(user_delete.text, 'html.parser')
+emperor_check = soup.find_all('td')
+for i in range(int(len(emperor_check) / 6)):
+	if emperor_check[6 * i].text.strip() == user['username']:
+		tmp_user_id = 6 * i
+		if emperor_check[tmp_user_id + 2].text.strip() == 0:
+			print("content delete failed")
+			exit()
 
-# about 페이지 확인
-# response = session.get(check_url + "/about")
+user_delete = session.get(check_url + "/delete_user/" + str(user_id))
+soup = BeautifulSoup(user_delete.text, 'html.parser')
+emperor_check = soup.find_all('td')
+for i in range(int(len(emperor_check) / 6)):
+	if emperor_check[6 * i].text.strip() == user['username']:
+		print("content delete failed")
+		exit()
+
+#TODO : 5-4. flag qr 코드 확인
+data = session.get(check_url + "/emperor")
+soup = BeautifulSoup(data.text, 'html.parser')
+emperor_check = soup.find('img', {'class': 'modal-content'})
+print(emperor_check)
+#! sla check code 위치에 따라 달라짐,,,, 훔,, 좋은 방법 없을까,,,?
