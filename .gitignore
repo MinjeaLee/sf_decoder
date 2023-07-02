@@ -1,5 +1,4 @@
 # venv dir ignore
 venv/
-db.sqlite3
-flag.txt
+db.sqlite
 __pycache__/
