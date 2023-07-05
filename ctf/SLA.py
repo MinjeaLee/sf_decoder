@@ -4,6 +4,7 @@ import random
 import base64
 import time
 
+
 #todo
 #! TODO : 1. 로그인 회원가입 절차 확인
 #! TODO : 1-2. Emperor 회원 가입 불가 확인
@@ -23,6 +24,7 @@ def encode_base64(data):
 	return result
 
 check_url = "http://localhost:4242"
+
 
 user = {
     'username' : "SLA" + str(random.randint(1, 100000)),
@@ -167,6 +169,6 @@ for i in range(int(len(emperor_check) / 6)):
 #TODO : 5-4. flag qr 코드 확인
 data = session.get(check_url + "/emperor")
 soup = BeautifulSoup(data.text, 'html.parser')
-emperor_check = soup.find('img', {'class': 'modal-content'})
-print(emperor_check)
-#! sla check code 위치에 따라 달라짐,,,, 훔,, 좋은 방법 없을까,,,?
+# src
+emperor_check = soup.find('img', {'class': 'modal-content'}).get('src')
+#! qr 코드 인식을 위한 라이브러리 설치가 오류가 발생
