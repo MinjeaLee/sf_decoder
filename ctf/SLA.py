@@ -4,7 +4,6 @@ import random
 import base64
 import time
 
-
 #todo
 #! TODO : 1. 로그인 회원가입 절차 확인
 #! TODO : 1-2. Emperor 회원 가입 불가 확인
@@ -13,9 +12,9 @@ import time
 #! TODO : 4. Emperor 계정 확인
 #! TODO : 5. Emperor page 접속 확인
 #! TODO : 5-2. Emperor page에서 추가한 유저 정보 일치 여부 확인
-#TODO : 5-3. 추가한 유저, 작성 글 삭제 여부 확인
+#! TODO : 5-3. 추가한 유저, 작성 글 삭제 여부 확인
 #TODO : 5-4. flag qr 코드 확인
-
+#! TODO : 5-5. Emperor logout 절차 확인
 
 def encode_base64(data):
 	bytes = data.encode('utf-8')
@@ -24,7 +23,6 @@ def encode_base64(data):
 	return result
 
 check_url = "http://localhost:4242"
-
 
 user = {
     'username' : "SLA" + str(random.randint(1, 100000)),
@@ -36,7 +34,6 @@ emperor = {
 	'username': "emperor",
 	'password': flag
 }
-print(emperor['password'])
 
 # 로그인 회원가입 절차 확인
 try:
@@ -45,7 +42,7 @@ try:
 	login = session.post(check_url + "/login", data=user)
 except:
 	print("register or login process failed")
-	exit()
+	exit(1)
 
 # 로그인 성공 여부, 계정명 같은 지 확인
 response = session.get(check_url + "/about")
@@ -57,7 +54,7 @@ username_check = soup.find(
 
 if username_check.split(" ")[3] != user['username']:
 	print("is not same username")
-	exit()
+	exit(1)
 
 #TODO : 1-2. Emperor 회원 가입 불가 확인
 register = requests.post(check_url + "/register", data=emperor)
@@ -66,7 +63,7 @@ register_check = soup.find(
 	'script')
 if register_check == None:
 	print("Emperor 회원 가입 가능")
-	exit()
+	exit(1)
 
 #잘못된 Emperor 계정으로 로그인 시도 확인
 emperor["password"] = random.randint(1, 100000)
@@ -75,7 +72,7 @@ soup = BeautifulSoup(login.text, 'html.parser')
 mis_emperor_login = soup.find('script').text.strip()
 if mis_emperor_login != "alert(\"Login failed, check your username or password\");":
 	print("잘못된 Emperor 계정 로그인 가능")
-	exit()
+	exit(1)
 
 #TODO : 2. 인코딩 서비스 무결성, 가용성 확인
 # login
@@ -106,13 +103,13 @@ for i in range(3):
 		encode_text = text[2 * i + 1].text.strip()
 	if plain_text != random_string:
 		print("plain_text is not same random_string")
-		exit()
+		exit(1)
 	if encode_text != result:
 		print("encode_text is not same result")
-		exit()
+		exit(1)
 	if elapse > 0.5:
 		print("elapse time is too long")
-		exit()
+		exit(1)
 
 #TODO : 3. 로그아웃 절차 확인
 logout = session.get(check_url + "/logout")
@@ -120,9 +117,10 @@ logout = session.get(check_url + "/logout")
 cookies = session.cookies.get_dict()
 if cookies != {}:
 	print("logout failed")
-	exit()
+	exit(1)
 
 #TODO : 4. Emperor 계정 확인
+#TODO : 5. Emperor page 접속 확인
 # login
 emperor["password"] = flag
 session = requests.Session()
@@ -130,8 +128,9 @@ login = session.post(check_url + "/login", data=emperor)
 cookies = session.cookies.get_dict()
 if cookies == {}:
 	print("login failed")
-	exit()
+	exit(1)
 
+#TODO : 5-2. Emperor page에서 추가한 유저 정보 일치 여부 확인
 connect_emperor = session.get(check_url + "/emperor")
 soup = BeautifulSoup(connect_emperor.text, 'html.parser')
 emperor_check = soup.find_all('td')
@@ -144,7 +143,7 @@ for i in range(len(emperor_check)):
 		exist_flag += 1
 if exist_flag != 2:
 	print("emperor page incorrect run")
-	exit()
+	exit(1)
 
 #TODO : 5-3. 추가한 유저, 작성 글 삭제 여부 확인
 user_delete = session.get(
@@ -156,7 +155,7 @@ for i in range(int(len(emperor_check) / 6)):
 		tmp_user_id = 6 * i
 		if emperor_check[tmp_user_id + 2].text.strip() == 0:
 			print("content delete failed")
-			exit()
+			exit(1)
 
 user_delete = session.get(check_url + "/delete_user/" + str(user_id))
 soup = BeautifulSoup(user_delete.text, 'html.parser')
@@ -164,11 +163,24 @@ emperor_check = soup.find_all('td')
 for i in range(int(len(emperor_check) / 6)):
 	if emperor_check[6 * i].text.strip() == user['username']:
 		print("content delete failed")
-		exit()
+		exit(1)
 
+'''
 #TODO : 5-4. flag qr 코드 확인
 data = session.get(check_url + "/emperor")
 soup = BeautifulSoup(data.text, 'html.parser')
 # src
 emperor_check = soup.find('img', {'class': 'modal-content'}).get('src')
 #! qr 코드 인식을 위한 라이브러리 설치가 오류가 발생
+'''
+
+#TODO : 5-5. Emperor logout 절차 확인
+logout = session.get(check_url + "/logout")
+# 쿠키 확인
+cookies = session.cookies.get_dict()
+if cookies != {}:
+	print("logout failed")
+	exit(1)
+
+print("SLA Check Success")
+exit(0)

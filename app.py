@@ -4,17 +4,24 @@ import os
 from model import db, User, Post
 from service import encode_base64, str_to_qrcode
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
 app = Flask(__name__)
 
 
-if not os.path.exists('flag.txt'):
-	print('flag.txt not found!')
-	exit(0)
-else:
-	with open('flag.txt', 'r') as f:
-		flag = f.read()
-	app.secret_key = str(flag)
-	str_to_qrcode(app.secret_key)
+def check_flag():
+    if not os.path.exists('flag.txt'):
+        print('flag.txt not found!')
+    else:
+        with open('flag.txt', 'r') as f:
+            flag = f.read()
+        app.secret_key = str(flag)
+        str_to_qrcode(app.secret_key)
+
+
+scheduler = BackgroundScheduler(daemon=True)
+scheduler.add_job(check_flag, 'interval', minutes=5)
+scheduler.start()
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_file = os.path.join(base_dir, 'db.sqlite')
@@ -73,6 +80,14 @@ def about(content=None, result=None):
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+	if not os.path.exists('flag.txt'):
+		print('flag.txt not found!')
+		exit(0)
+	else:
+		with open('flag.txt', 'r') as f:
+			flag = f.read()
+		app.secret_key = str(flag)
+		str_to_qrcode(app.secret_key)
 	if request.method == 'POST':
 		username = request.form['username']
 		password = request.form['password']
